@@ -87,11 +87,21 @@ let increment = (id) => {
   } else {
     searchItem.quantity += 1;
   }
-
+  // this is to update the value of the item in the card every time the user hits the + button.
+  generateCart();
   // Update the text content of the DOM element
   document.getElementById(id).textContent = searchItem.quantity;
   localStorage.setItem("data", JSON.stringify(basket));
-  itemCalculate(true);
+  itemCalculate();
+};
+
+let removeItem = (id) => {
+  let selected = id;
+  basket = basket.filter((x) => x.id !== selected);
+  // resetting the local storage with the removed item from the basket.
+  localStorage.setItem("data", JSON.stringify(basket));
+  // re-rendering the cart.
+  generateCart();
 };
 
 generateCart();
