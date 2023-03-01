@@ -70,6 +70,7 @@ let decrement = (id) => {
   generateCart();
   localStorage.setItem("data", JSON.stringify(basket));
   itemCalculate();
+  generateTotalBill();
 };
 
 // responsible for increasing the data when user hits the + and - buttons
@@ -93,6 +94,7 @@ let increment = (id) => {
   document.getElementById(id).textContent = searchItem.quantity;
   localStorage.setItem("data", JSON.stringify(basket));
   itemCalculate();
+  generateTotalBill();
 };
 
 let removeItem = (id) => {
@@ -102,6 +104,39 @@ let removeItem = (id) => {
   localStorage.setItem("data", JSON.stringify(basket));
   // re-rendering the cart.
   generateCart();
+  generateTotalBill();
+  itemCalculate();
+};
+
+let generateTotalBill = () => {
+  if (basket.length !== 0) {
+    let amount = basket.map((x) => {
+      let { id, quantity } = x;
+      let itemCart = data.find((x) => x.id === id) || [];
+      return quantity * itemCart.price;
+    }).reduce((x, y) => x + y, 0);
+    label.innerHTML = `
+        <h2>Total Bill: $${amount}</h2>
+        <button onclick="checkOut()" class="check-out">CheckOut</button>
+        <button onclick="clearCart()" class="clear-cart">Clear Cart</button>
+      `
+  }
+  else {
+    return;
+  }
+};
+
+let clearCart = () => {
+  basket = [];
+  localStorage.setItem("data", JSON.stringify(basket));
+  generateCart();
+  // set the cart logo no to 0
+  itemCalculate();
+};
+
+let checkOut = () => {
+  console.log("checked out!");
 };
 
 generateCart();
+generateTotalBill();
